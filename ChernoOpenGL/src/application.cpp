@@ -127,7 +127,7 @@ int main(void)
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
     glEnableVertexAttribArray(0);
-
+    
     std::string vertexShader = ParseShader("res/shaders/basic.shader").VertexSource;
     std::string fragmentShader = ParseShader("res/shaders/basic.shader").FragmentSource;
     unsigned int shader = CreateShader(vertexShader, fragmentShader);
@@ -147,7 +147,7 @@ int main(void)
         /* Poll for and process events */
         glfwPollEvents();
     }
-
+    glDeleteProgram(shader);
     glfwTerminate();
     return 0;
 }
