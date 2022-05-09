@@ -137,8 +137,9 @@ int main(void)
 
     unsigned int ebo;
     glGenBuffers(1, &ebo);
+    glNamedBufferData(ebo, 6 * sizeof(float), index, GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), index,GL_STATIC_DRAW);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), index,GL_STATIC_DRAW);
     
     
     
