@@ -111,22 +111,36 @@ int main(void)
         return -1;
     }
 
-    float positions[6]
+    float positions[]
     {
         -0.5f, -0.5f,
-         0.0f,  0.5f,
          0.5f, -0.5f,
+         0.5f, 0.5f,
+        -0.5f, 0.5f
+    };
+
+    unsigned int index[]
+    {
+        0, 1, 2,
+        2, 3, 0
     };
 
 
     unsigned int buffer;
     glGenBuffers(1, &buffer);
-    glNamedBufferData(buffer, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+    glNamedBufferData(buffer, 8 * sizeof(float), positions, GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     //glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions,GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
     glEnableVertexAttribArray(0);
+
+    unsigned int ebo;
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), index,GL_STATIC_DRAW);
+    
+    
     
     std::string vertexShader = ParseShader("res/shaders/basic.shader").VertexSource;
     std::string fragmentShader = ParseShader("res/shaders/basic.shader").FragmentSource;
@@ -140,7 +154,8 @@ int main(void)
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
