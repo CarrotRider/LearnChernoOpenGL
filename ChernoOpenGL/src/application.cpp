@@ -9,6 +9,8 @@
 #include "Renderer.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "VertexBufferLayout.h"
 
 static unsigned int CompileShader(unsigned int type, const std::string& source)
 {
@@ -131,16 +133,12 @@ int main(void)
     };
 
     {
-        unsigned int vao;
-        GLCall(glGenVertexArrays(1, &vao));
-        GLCall(glBindVertexArray(vao));
-
+        VertexArray va;
         VertexBuffer vbo(positions, 8 * sizeof(float));
-
-        GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
-        GLCall(glEnableVertexAttribArray(0));
-
-        GLCall(glBindVertexArray(0));
+        VertexBufferLayout layout;
+        layout.Push<float>(2);
+        va.AddBuffer(vbo, layout);
+        va.UnBind();
 
         IndexBuffer ibo(index, 6);
 
@@ -166,7 +164,7 @@ int main(void)
             GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
             GLCall(glUseProgram(shader));
-            GLCall(glBindVertexArray(vao));
+            va.Bind();
             ibo.Bind();
             GLCall(glUniform4f(location, r, 0.0f, 0.0f, 1.0f));
             GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
