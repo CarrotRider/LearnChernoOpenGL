@@ -36,6 +36,11 @@ void Shader::SetUniform(const std::string& name,
     GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3));
 }
 
+void Shader::SetUniform(const std::string& name, int num)
+{
+   GLCall(glUniform1i(GetUniformLocation(name), num));
+}
+
 ShaderProgramSource Shader::ParseShader(const std::string& filepath)
 {
     std::ifstream stream(filepath);

@@ -12,6 +12,7 @@
 #include "VertexArray.h"
 #include "VertexBufferLayout.h"
 #include "Shader.h"
+#include "Texture.h"
 
 int main(void)
 {
@@ -43,10 +44,10 @@ int main(void)
 
     float positions[]
     {
-        -0.5f, -0.5f,
-         0.5f, -0.5f,
-         0.5f, 0.5f,
-        -0.5f, 0.5f
+        -0.5f, -0.5f, 0.0f, 0.0f,
+         0.5f, -0.5f, 1.0f, 0.0f,
+         0.5f,  0.5f, 1.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 1.0f
     };
 
     unsigned int index[]
@@ -57,8 +58,9 @@ int main(void)
 
     {
         VertexArray va;
-        VertexBuffer vbo(positions, 8 * sizeof(float));
+        VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
         VertexBufferLayout layout;
+        layout.Push<float>(2);
         layout.Push<float>(2);
         va.AddBuffer(vbo, layout);
         va.UnBind();
@@ -72,6 +74,9 @@ int main(void)
         ibo.UnBind();
         shader.UnBind();
 
+        Texture texture("res/textures/carrot.png");
+        texture.Bind();
+
         Renderer renderer;
 
         float r = 0.0f;
@@ -82,7 +87,8 @@ int main(void)
         {
             renderer.Clear(0.2f, 0.3f, 0.3f, 1.0f);
             shader.Bind();
-            shader.SetUniform("uColor", r, 0.0f, 0.0f, 1.0f);
+            //shader.SetUniform("uColor", r, 0.0f, 0.0f, 1.0f);
+            shader.SetUniform("uTex", 0);
             renderer.Draw(va, ibo, shader);
 
             r += increment;
