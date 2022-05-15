@@ -1,6 +1,9 @@
 #include <iostream>
 #include <glad/glad.h>
 #include "Renderer.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
+#include "Shader.h"
 
 void GLClearError()
 {
@@ -18,4 +21,28 @@ bool GLLogCall(const char* func, const char* file, int line)
         return false;
     }
     return true;
+}
+
+Renderer::Renderer()
+{
+
+}
+Renderer::~Renderer()
+{
+
+}
+
+void Renderer::Clear(float r, float g, float b, float a) const
+{
+    GLCall(glClearColor(r, g, b, a));
+    GLCall(glClear(GL_COLOR_BUFFER_BIT));
+}
+void Renderer::Draw(const VertexArray& va, const IndexBuffer& ib,
+    const Shader& shader) const
+{
+    va.Bind();
+    ib.Bind();
+    shader.Bind();
+    GLCall(glDrawElements(GL_TRIANGLES, ib.GetCount(), 
+        GL_UNSIGNED_INT, nullptr));
 }
