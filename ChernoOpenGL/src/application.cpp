@@ -14,6 +14,9 @@
 #include "Shader.h"
 #include "Texture.h"
 
+#include "vendor/glm/glm.hpp"
+#include "vendor/glm/gtc/matrix_transform.hpp"
+
 int main(void)
 {
     GLFWwindow* window;
@@ -69,6 +72,9 @@ int main(void)
 
         Shader shader("res/shaders/basic.shader");
         shader.Bind();
+
+        glm::mat4x4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+        shader.SetUniform("u_MVP", proj);
 
         vbo.UnBind();
         ibo.UnBind();

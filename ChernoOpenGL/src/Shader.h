@@ -2,6 +2,7 @@
 #define SHADER_H
 
 #include <string>
+#include "vendor/glm/mat4x4.hpp"
 
 struct ShaderProgramSource
 {
@@ -21,6 +22,7 @@ public:
 	void SetUniform(const std::string& name,
 		float v0, float v1, float v2, float v3);
 	void SetUniform(const std::string& name, int num);
+	void SetUniform(const std::string& name, glm::mat4x4 mat);
 private:
 	ShaderProgramSource ParseShader(const std::string& filepath);
 	unsigned int CreateShader(const std::string& vertexShader,
