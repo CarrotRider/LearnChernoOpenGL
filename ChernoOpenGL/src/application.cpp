@@ -87,10 +87,10 @@ int main(void)
 
     float positions[]
     {
-         250.0f,  540.0f, 0.0f, 0.0f,
-         450.0f,  540.0f, 1.0f, 0.0f,
-         450.0f,  740.0f, 1.0f, 1.0f,
-         250.0f,  740.0f, 0.0f, 1.0f
+         -100.0f, -100.0f, 0.0f, 0.0f,
+          100.0f, -100.0f, 1.0f, 0.0f,
+          100.0f,  100.0f, 1.0f, 1.0f,
+         -100.0f,  100.0f, 0.0f, 1.0f
     };
 
     unsigned int index[]
@@ -128,7 +128,8 @@ int main(void)
         float increment = 0.05f;
 
         bool show_demo_window = true;
-        glm::vec3 trans = glm::vec3(0, 0, 0);
+        glm::vec3 transA = glm::vec3(0, 0, 0);
+        glm::vec3 transB = glm::vec3(0, 0, 0);
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
@@ -137,18 +138,32 @@ int main(void)
             ImGui::NewFrame();
 
             renderer.Clear(0.2f, 0.3f, 0.3f, 1.0f);
-            shader.Bind();
-            glm::mat4x4 model = glm::translate(glm::mat4(1.0f), trans);
-            glm::mat4 mvp = proj * model;
-            shader.SetUniform("u_MVP", mvp);
-            shader.SetUniform("uTex", 0);
-            renderer.Draw(va, ibo, shader);
+            {
+                shader.Bind();
+                glm::mat4x4 model = glm::translate(glm::mat4(1.0f), transA);
+                glm::mat4 mvp = proj * model;
+                shader.SetUniform("u_MVP", mvp);
+                shader.SetUniform("uTex", 0);
+                renderer.Draw(va, ibo, shader);
+
+                ImGui::SliderFloat3("TranslationA", &transA.x, -500.0f, 500.0f);
+            }
+            {
+                shader.Bind();
+                glm::mat4x4 model = glm::translate(glm::mat4(1.0f), transB);
+                glm::mat4 mvp = proj * model;
+                shader.SetUniform("u_MVP", mvp);
+                shader.SetUniform("uTex", 0);
+                renderer.Draw(va, ibo, shader);
+
+                ImGui::SliderFloat3("TranslationB", &transB.x, -500.0f, 500.0f);
+            }
+
 
             r += increment;
             if (r > 1)
                 r = 0.0f;
 
-            ImGui::SliderFloat3("Translation", &trans.x, -500.0f, 500.0f);
 
             /*ImGui::ShowDemoWindow(&show_demo_window);*/
 
