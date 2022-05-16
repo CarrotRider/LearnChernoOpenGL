@@ -21,6 +21,8 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include "test/TestClearColor.h"
+
 int main(void)
 {
     GLFWwindow* window;
@@ -84,52 +86,9 @@ int main(void)
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
-    float positions[]
     {
-         -100.0f, -100.0f, 0.0f, 0.0f,
-          100.0f, -100.0f, 1.0f, 0.0f,
-          100.0f,  100.0f, 1.0f, 1.0f,
-         -100.0f,  100.0f, 0.0f, 1.0f
-    };
+        test::TestClearColor test;
 
-    unsigned int index[]
-    {
-        0, 1, 2,
-        2, 3, 0
-    };
-
-    {
-        VertexArray va;
-        VertexBuffer vbo(positions, 4 * 4 * sizeof(float));
-        VertexBufferLayout layout;
-        layout.Push<float>(2);
-        layout.Push<float>(2);
-        va.AddBuffer(vbo, layout);
-        va.UnBind();
-
-        IndexBuffer ibo(index, 6);
-
-        Shader shader("res/shaders/basic.shader");
-        shader.Bind();
-
-        glm::mat4x4 proj = glm::ortho(0.0f, 1080.0f, 0.0f, 960.0f, -1.0f, 1.0f);
-
-        vbo.UnBind();
-        ibo.UnBind();
-        shader.UnBind();
-
-        Texture texture("res/textures/carrot.png");
-        texture.Bind();
-
-        Renderer renderer;
-
-        float r = 0.0f;
-        float increment = 0.05f;
-
-        bool show_demo_window = true;
-        glm::vec3 transA = glm::vec3(0, 0, 0);
-        glm::vec3 transB = glm::vec3(0, 0, 0);
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
@@ -137,35 +96,10 @@ int main(void)
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
 
-            renderer.Clear(0.2f, 0.3f, 0.3f, 1.0f);
-            {
-                shader.Bind();
-                glm::mat4x4 model = glm::translate(glm::mat4(1.0f), transA);
-                glm::mat4 mvp = proj * model;
-                shader.SetUniform("u_MVP", mvp);
-                shader.SetUniform("uTex", 0);
-                renderer.Draw(va, ibo, shader);
-
-                ImGui::SliderFloat3("TranslationA", &transA.x, -500.0f, 500.0f);
-            }
-            {
-                shader.Bind();
-                glm::mat4x4 model = glm::translate(glm::mat4(1.0f), transB);
-                glm::mat4 mvp = proj * model;
-                shader.SetUniform("u_MVP", mvp);
-                shader.SetUniform("uTex", 0);
-                renderer.Draw(va, ibo, shader);
-
-                ImGui::SliderFloat3("TranslationB", &transB.x, -500.0f, 500.0f);
-            }
-
-
-            r += increment;
-            if (r > 1)
-                r = 0.0f;
-
-
-            /*ImGui::ShowDemoWindow(&show_demo_window);*/
+            //
+            test.OnUpdate(0);
+            test.OnRender();
+            test.OnImGuiRender();
 
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
